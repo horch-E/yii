@@ -9,7 +9,7 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $mobile;
     public $password;
     public $rememberMe = true;
 
@@ -23,12 +23,32 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['mobile', 'password'], 'required'],
             // rememberMe must be a boolean value
+            ['mobile', 'trim'],
+            ['mobile', 'string', 'max' => 11],
+            ['mobile','validatePhone'],
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
         ];
+    }
+
+
+    /**
+     * 验证手机号码是否符合规则
+     */
+    public function validatePhone($attribute,$params)
+    {
+        if (!$this->hasErrors()){
+            $len = strlen($this->mobile);
+            $pattern = "/0?(13|14|15|18)[0-9]{9}/";
+            $result =preg_match($pattern,$this->mobile);
+            if ($len != 11 || !$result)
+            {
+                $this->addError($attribute,'手机号码格式错误！');
+            } 
+        }
     }
 
     /**
@@ -70,9 +90,21 @@ class LoginForm extends Model
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByMobile($this->mobile);
         }
 
         return $this->_user;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'mobile' => '手机号码',
+            'password' => '密码',
+        ];
+    }
+
 }
