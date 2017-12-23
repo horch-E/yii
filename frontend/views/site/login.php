@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use \yii\captcha\Captcha;
 
 $this->title = '登录';
 $this->params['breadcrumbs'][] = $this->title;
@@ -23,6 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
+                <?= $form->field($model, 'verifyCode')->widget(Captcha::className()) ?>
+                
                 <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
                 <div style="color:#999;margin:1em 0">

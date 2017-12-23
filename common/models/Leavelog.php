@@ -18,6 +18,7 @@ use Yii;
  * @property User $initiator
  * @property Leave $leave
  * @property Process[] $processes
+ * @property leavelogstatus $status
  */
 class Leavelog extends \yii\db\ActiveRecord
 {
@@ -48,13 +49,13 @@ class Leavelog extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'initiator_id' => 'Initiator ID',
-            'leave_id' => 'Leave ID',
-            'create_time' => 'Create Time',
-            'begin_time' => 'Begin Time',
-            'end_time' => 'End Time',
-            'status' => 'Status',
+            'id' => '记录ID',
+            'initiator_id' => '请假人',
+            'leave_id' => '请假类型',
+            'create_time' => '创建时间',
+            'begin_time' => '开始时间',
+            'end_time' => '结束时间',
+            'status' => '状态',
         ];
     }
 
@@ -80,5 +81,21 @@ class Leavelog extends \yii\db\ActiveRecord
     public function getProcesses()
     {
         return $this->hasMany(Process::className(), ['log_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getstatus0()
+    {
+        return $this->hasOne(leavelogstatus::className(), ['type' => 'status']);
+    }
+
+    /**
+    * 返回请假信息 by Initiator
+    */
+    static public function findlog()
+    {
+        return static::findOne(['initiator_id'=>2]);
     }
 }

@@ -43,9 +43,9 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '注册', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => '我的审批', 'url' => ['/site/about1']];
-        $menuItems[] = ['label' => '我的请假', 'url' => ['/site/about1']];
-        $menuItems[] = ['label' => '个人中心', 'url' => ['/site/about1']];
+        $menuItems[] = ['label' => '我的审批', 'url' => ['/leave/Index']];
+        $menuItems[] = ['label' => '我的请假', 'url' => ['/leave/show']];
+        $menuItems[] = ['label' => '个人中心', 'url' => ['/leave/Index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(

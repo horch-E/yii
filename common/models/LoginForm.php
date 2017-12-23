@@ -12,7 +12,7 @@ class LoginForm extends Model
     public $mobile;
     public $password;
     public $rememberMe = true;
-
+    public $verifyCode;
     private $_user;
 
 
@@ -31,6 +31,7 @@ class LoginForm extends Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            ['verifyCode','captcha'],
         ];
     }
 
@@ -104,6 +105,9 @@ class LoginForm extends Model
         return [
             'mobile' => '手机号码',
             'password' => '密码',
+            'rememberMe' => '记住我',
+            'verifyCode' => '验证码',
+
         ];
     }
 
