@@ -40,6 +40,7 @@ class Process extends \yii\db\ActiveRecord
             [['detail'], 'string', 'max' => 100],
             [['log_id'], 'exist', 'skipOnError' => true, 'targetClass' => Leavelog::className(), 'targetAttribute' => ['log_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['status'], 'exist', 'skipOnError' => true, 'targetClass' => processstatus::className(), 'targetAttribute' => ['status' => 'type']],
         ];
     }
 
@@ -75,4 +76,13 @@ class Process extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getstatus0()
+    {
+        return $this->hasOne(processstatus::className(), ['type' => 'status']);
+    }
+
 }

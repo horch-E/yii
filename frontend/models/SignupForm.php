@@ -13,6 +13,7 @@ class SignupForm extends Model
     public $mobile;
     public $password;
     public $password1;
+    public $verifyCode;
 
 
     /**
@@ -38,7 +39,8 @@ class SignupForm extends Model
 
             ['password1', 'required'],
             ['password1', 'string', 'min' => 6],
-            ['password1','validatePassword']
+            ['password1','validatePassword'],
+            ['verifyCode','captcha']
         ];
     }
 
@@ -80,6 +82,7 @@ class SignupForm extends Model
             'mobile' => '手机号码',
             'password' => '密码',
             'password1' => '确认密码',
+            'verifyCode' => '验证码'
         ];
     }
 
