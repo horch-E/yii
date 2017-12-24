@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\Helpers\Arrayhelper;
 
 /**
  * This is the model class for table "leave".
@@ -60,5 +61,15 @@ class Leave extends \yii\db\ActiveRecord
     public function getLeavelogs()
     {
         return $this->hasMany(Leavelog::className(), ['leave_id' => 'id']);
+    }
+
+    /**
+     *  获取请假类型 键值对
+     */
+    static public function findLeave()
+    {
+        $leaveObj = static::find()->all();
+        $leaves = arrayhelper::map($leaveObj,'id','type');
+        return $leaves;
     }
 }

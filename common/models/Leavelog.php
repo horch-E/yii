@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $initiator_id
  * @property integer $leave_id
+ * @property integer $detail
  * @property integer $create_time
  * @property integer $begin_time
  * @property integer $end_time
@@ -22,6 +23,9 @@ use Yii;
  */
 class Leavelog extends \yii\db\ActiveRecord
 {
+
+    const STATUS_UNDO = 0;
+
     /**
      * @inheritdoc
      */
@@ -36,10 +40,12 @@ class Leavelog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['initiator_id', 'leave_id', 'create_time', 'begin_time', 'end_time'], 'required'],
-            [['initiator_id', 'leave_id', 'create_time', 'begin_time', 'end_time', 'status'], 'integer'],
+            [['initiator_id', 'leave_id', 'create_time', 'begin_time', 'end_time','detail'], 'required'],
+            [['initiator_id', 'leave_id', 'create_time', 'status'], 'integer'],
             [['initiator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['initiator_id' => 'id']],
             [['leave_id'], 'exist', 'skipOnError' => true, 'targetClass' => Leave::className(), 'targetAttribute' => ['leave_id' => 'id']],
+            [['status'], 'exist', 'skipOnError' => true, 'targetClass' => leavelogstatus::className(), 'targetAttribute' => ['status' => 'type']],
+            [['detail'], 'string', 'max' => 255],
         ];
     }
 
@@ -52,6 +58,7 @@ class Leavelog extends \yii\db\ActiveRecord
             'id' => '记录ID',
             'initiator_id' => '请假人',
             'leave_id' => '请假类型',
+            'detail' => '详情',
             'create_time' => '创建时间',
             'begin_time' => '开始时间',
             'end_time' => '结束时间',
@@ -94,8 +101,9 @@ class Leavelog extends \yii\db\ActiveRecord
     /**
     * 返回请假信息 by Initiator
     */
-    static public function findlog()
+    static public function findlog($id)
     {
-        return static::findOne(['initiator_id'=>2]);
+        return static::findOne(['initiator_id'=>$id]);
     }
+
 }

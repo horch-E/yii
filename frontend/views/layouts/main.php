@@ -36,8 +36,8 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => '首页', 'url' => ['/site/index']],
-        //['label' => '关于', 'url' => ['/site/about']],
-        //['label' => '联系', 'url' => ['/site/contact']],
+        ['label' => '关于', 'url' => ['/site/about']],
+        ['label' => '联系', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '注册', 'url' => ['/site/signup']];
@@ -45,6 +45,7 @@ AppAsset::register($this);
     } else {
         $menuItems[] = ['label' => '我的审批', 'url' => ['/leave/Index']];
         $menuItems[] = ['label' => '我的请假', 'url' => ['/leave/show']];
+        $menuItems[] = ['label' => '我要请假', 'url' => ['/leave/new']];
         $menuItems[] = ['label' => '个人中心', 'url' => ['/leave/Index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
