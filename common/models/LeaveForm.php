@@ -23,7 +23,7 @@ class LeaveForm extends Model
         return [
             [['leave_id','begin_time', 'end_time','detail','vetter_id'], 'required'],
             [['leave_id','vetter_id'], 'integer'],
-            [['detail'], 'string', 'max' => 255],   
+            [['detail'], 'string', 'max' => 500],   
         ];
     }
 
@@ -55,7 +55,6 @@ class LeaveForm extends Model
         $leavelog->detail = $this->detail;
         $leavelog->begin_time = $this->begin_time;
         $leavelog->end_time = $this->end_time;
-        $leavelog->create_time = time();
         $leavelog->status = leavelog::STATUS_UNDO;
         if($leavelog->save()){
             $process = new process();
@@ -63,8 +62,6 @@ class LeaveForm extends Model
             $process->user_id = $this->vetter_id;
             $process->status = 0;
             $process->sort = 1;
-            $process->created_time =time();
-            $process->updata_time =time();
             if($process->save())
                 return 1;
             else 

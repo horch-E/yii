@@ -11,10 +11,11 @@ use Yii;
  * @property integer $initiator_id
  * @property integer $leave_id
  * @property integer $detail
- * @property integer $create_time
  * @property integer $begin_time
  * @property integer $end_time
  * @property integer $status
+ * @property integer $create_time
+ * @property integer $update_time
  *
  * @property User $initiator
  * @property Leave $leave
@@ -40,12 +41,12 @@ class Leavelog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['initiator_id', 'leave_id', 'create_time', 'begin_time', 'end_time','detail'], 'required'],
-            [['initiator_id', 'leave_id', 'create_time', 'status'], 'integer'],
+            [['initiator_id', 'leave_id', 'begin_time', 'end_time','detail'], 'required'],
+            [['initiator_id', 'leave_id',  'status'], 'integer'],
             [['initiator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['initiator_id' => 'id']],
             [['leave_id'], 'exist', 'skipOnError' => true, 'targetClass' => Leave::className(), 'targetAttribute' => ['leave_id' => 'id']],
             [['status'], 'exist', 'skipOnError' => true, 'targetClass' => leavelogstatus::className(), 'targetAttribute' => ['status' => 'type']],
-            [['detail'], 'string', 'max' => 255],
+            [['detail'], 'string', 'max' => 500],
         ];
     }
 
@@ -57,8 +58,8 @@ class Leavelog extends \yii\db\ActiveRecord
         return [
             'id' => '记录ID',
             'initiator_id' => '请假人',
-            'leave_id' => '请假类型',
-            'detail' => '详情',
+            'leave_id' => '类型',
+            'detail' => '原因',
             'create_time' => '创建时间',
             'begin_time' => '开始时间',
             'end_time' => '结束时间',
@@ -104,6 +105,30 @@ class Leavelog extends \yii\db\ActiveRecord
     static public function findlog($id)
     {
         return static::findOne(['initiator_id'=>$id]);
+    }
+
+    /**
+    * 重写beforesave
+    */
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($insert)
+            {
+                $this->create_time = time();
+                $this->update_time = time();
+            }
+            else
+            {
+                $this->update_time = time();
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

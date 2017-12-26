@@ -6,7 +6,8 @@ use common\models\User;
 use common\models\leave;
 use common\models\leavelog;
 use common\models\LeaveForm;
-use yii\data\Pagination;
+use common\models\LeavelogSearch;
+use yii\data\ActiveDataProvider;
 class LeaveController extends \yii\web\Controller
 {
     public function actionIndex()
@@ -42,16 +43,19 @@ class LeaveController extends \yii\web\Controller
     {
         $id = Yii::$app->user->identity->id;
         $query = leavelog::find()->where(['initiator_id'=>$id]);
-        $Pagination = new Pagination([
-            'defaultPageSize' => 5,
-            'totalCount' => $query->count(),
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'create_time' => SORT_DESC,
+                    ]
+                ],
         ]);
-        $leavelogs = $query->orderBy('create_time')
-                ->offset($Pagination->offset)
-                ->limit($Pagination->limit)
-                ->all();
-
-    	return $this->render('show',['leavelogs'=> $leavelogs,'Pagination'=>$Pagination]);
+        $searchModel = new LeavelogSearch();
+        return $this->render('show',['dataProvider'=>$dataProvider,'searchModel'=>$searchModel]);
     }
 
 }

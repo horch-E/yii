@@ -12,8 +12,8 @@ use Yii;
  * @property integer $user_id
  * @property integer $status
  * @property integer $sort
- * @property integer $created_time
- * @property integer $updata_time
+ * @property integer $create_time
+ * @property integer $update_time
  * @property string $detail
  *
  * @property Leavelog $log
@@ -35,8 +35,8 @@ class Process extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['log_id', 'user_id', 'status', 'sort', 'created_time', 'updata_time'], 'required'],
-            [['log_id', 'user_id', 'status', 'sort', 'created_time', 'updata_time'], 'integer'],
+            [['log_id', 'user_id', 'status', 'sort'], 'required'],
+            [['log_id', 'user_id', 'status', 'sort'], 'integer'],
             [['detail'], 'string', 'max' => 100],
             [['log_id'], 'exist', 'skipOnError' => true, 'targetClass' => Leavelog::className(), 'targetAttribute' => ['log_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -55,8 +55,8 @@ class Process extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'status' => 'Status',
             'sort' => 'Sort',
-            'created_time' => 'Created Time',
-            'updata_time' => 'Updata Time',
+            'create_time' => 'Create Time',
+            'update_time' => 'Updata Time',
             'detail' => 'Detail',
         ];
     }
@@ -83,6 +83,30 @@ class Process extends \yii\db\ActiveRecord
     public function getstatus0()
     {
         return $this->hasOne(processstatus::className(), ['type' => 'status']);
+    }
+
+    /**
+    * 重写beforesave
+    */
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert))
+        {
+            if($insert)
+            {
+                $this->create_time = time();
+                $this->update_time = time();
+            }
+            else
+            {
+                $this->update_time = time();
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }
